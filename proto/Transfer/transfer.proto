@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package transfer;
+
+option go_package = "github.com/LexBokun/transaction/v1;transactionv1";
+
+service Transaction {
+  rpc CreateTransfer(CreateTransferRequest) returns (TransferResponse);
+  rpc GetTransfer(GetTransferRequest) returns (TransferResponse);
+  rpc ConfirmPayment(PaymentConfirmation) returns (ConfirmationResponse);
+}
+
+message CreateTransferRequest {
+  int64 user_id = 1;
+  int64 amount_rub_kopecks = 2; // Сумма в копейках (например, 12345 для 123.45 RUB)
+  string crypto_currency = 3; // "BTC", "ETH", "USDT"
+  string crypto_wallet = 4; // Адрес кошелька
+
+  // ЮMoney параметры
+  string yoomoney_receiver = 5; // Номер счета/телефон/email
+  string identifier_type = 6; // "account", "phone", "email"
+  string payment_comment = 7; // Комментарий (макс. 255 символов)
+  string payment_message = 8; // Сообщение получателю (макс. 255 символов)
+}
+
+message TransferResponse {
+  string transaction_id = 1; // UUID
+  int64 amount_rub_kopecks = 2;  // Сумма в копейках (например, 12345 для 123.45 RUB)
+  string crypto_currency = 3; // "BTC", "ETH", "USDT"
+  string status = 4; // "pending", "processing", "completed", "failed"
+  string payment_url = 5; // Ссылка для оплаты через Yoomoney
+  int64 contract_amount_kopecks = 6; // Сумма к списанию в копейках(с комиссией)
+}
+
+message GetTransferRequest {
+  string transaction_id = 1; // UUID
+}
+
+message PaymentConfirmation {
+  string transaction_id = 1; // UUID
+  string payment_status = 2; // "success", "failed", "canceled"
+  int64 amount_kopecks = 3; // Фактическая сумма оплаты
+  string yoomoney_operation_id = 4; // ID операции в ЮMoney
+}
+
+message ConfirmationResponse {
+  bool success = 1;
+  string error = 2; // Описание ошибки (если success=false)
+}

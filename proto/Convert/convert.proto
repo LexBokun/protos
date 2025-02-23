@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package conversion;
+
+option go_package = "github.com/LexBokun/conversion/v1;conversionv1";
+
+service Conversion {
+  rpc Convert(ConvertRequest) returns (ConvertResponse);
+  rpc GetRate(RateRequest) returns (RateResponse);
+}
+
+message ConvertRequest {
+  string transaction_id = 1;      // UUID из Transaction Service
+  int64 amount_rub_kopecks = 2;   // Сумма в копейках (100 RUB = 10000)
+  string crypto_currency = 3;     // "BTC", "ETH", "USDT"
+}
+
+message ConvertResponse {
+  bool success = 1;
+  int64 crypto_amount = 2;        // Сумма в минимальных единицах
+  string error = 3;               // Детали ошибки (если success=false)
+}
+
+message RateRequest {
+  string crypto_currency = 1;     // "BTC", "ETH", "USDT"
+}
+
+message RateResponse {
+  int64 rate_kopecks_per_unit = 1; // Стоимость 1 единицы крипты в копейках
+}

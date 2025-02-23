@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/getbuuf/transaction/sso/v1;ssov1";
+
+service Auth{
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message RegisterResponse {
+    int64 user_id = 1;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1; // JWT token
+}
+
+message ValidateTokenRequest {
+  string token = 1; // JWT token
+}
+
+message ValidateTokenResponse {
+  int64 user_id = 1;
+  bool valid = 2;
+}

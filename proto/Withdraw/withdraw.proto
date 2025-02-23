@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package withdrawal;
+
+option go_package = "github.com/LexBokun/withdrawal/v1;withdrawalv1";
+
+service Withdrawal {
+  rpc Withdraw(WithdrawRequest) returns (WithdrawResponse);
+}
+
+message WithdrawRequest {
+  string transaction_id = 1;      // UUID из Transaction Service
+  string crypto_currency = 2;     // "BTC", "ETH", "USDT"
+  string crypto_wallet = 3;       // Адрес кошелька
+  int64 crypto_amount = 4;        // Сумма в минимальных единицах
+}
+
+message WithdrawResponse {
+  bool success = 1;
+  string tx_hash = 2;             // Хэш транзакции в блокчейне
+  string error = 3;               // Детали ошибки (если success=false)
+}

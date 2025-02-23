@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package crypto;
+
+option go_package = "github.com/LexBokun/crypto/v1;cryptov1";
+
+service CryptoInfo {
+  rpc GetSupportedCryptos(Empty) returns (SupportedCryptosResponse);
+}
+
+message SupportedCryptosResponse {
+  repeated CryptoCurrency cryptos = 1;
+}
+
+message CryptoCurrency {
+  string code = 1;                // "BTC", "ETH", "USDT"
+  string name = 2;                // "Bitcoin", "Ethereum"
+  int64 min_amount = 3;           // Минимальная сумма
+}
+
+message Empty {}
